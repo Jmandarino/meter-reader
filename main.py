@@ -1,9 +1,13 @@
-import matplotlib
 from datetime import datetime
-import pandas as pd
 import time
 from datetime import timezone
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import numpy as np
+
+years = mdates.YearLocator()   # every year
+months = mdates.MonthLocator()  # every month
+yearsFmt = mdates.DateFormatter('%Y')
 
 # stores times
 t = [
@@ -77,14 +81,24 @@ for x in t:
 for x in axvlines_raw:
     axvlines.append(convert(x))
 
+print(dates)
 
 # plots dates on x, energy usage on y
+
+fig, ax = plt.subplots()
+# format x-axis values
+xfmt = mdates.DateFormatter('%d-%m %H:%M')
+ax.xaxis.set_major_formatter(xfmt)
+
+plt.xticks(rotation=90)
+
 plt.plot(dates, e)
 plt.xticks(dates,fontsize='small')
 
 # graphs verticle lines for reference of days
 for x in axvlines:
     plt.axvline(x=x, color='red', linestyle='--')
+
 
 plt.show()
 
