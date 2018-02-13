@@ -2,7 +2,6 @@
 from datetime import datetime
 from datetime import timedelta
 import time
-from datetime import timezone
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import numpy as np
