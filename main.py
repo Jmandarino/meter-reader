@@ -11,6 +11,12 @@ import numpy as np
 # TODO: meter reading automation (open CV or ML)
 # TODO: automate the creation of axvlines
 
+# stores processed dates in epoch time
+dates = []
+# stores lines verticle lines for graph
+axvlines_raw = []
+# stores processed lines (times converted to epoch time)
+axvlines = []
 # stores times
 t = [
 "2/5/18 0:00",
@@ -72,15 +78,6 @@ e = [
 
 ]
 
-
-# stores processed dates in epoch time
-dates = []
-
-# stores lines verticle lines for graph
-axvlines_raw = ["2/7/18 0:01", "2/8/18 0:01", "2/9/18 0:01", "2/10/18 0:01", "2/11/18 0:01", "2/12/18 0:01", "2/13/18 0:01"]
-# stores processed lines (times converted to epoch time)
-axvlines = []
-
 """
 HELPER FUNCTIONS
 """
@@ -102,7 +99,7 @@ FUNCTIONS
 # TODO: fix the format to be more readable
 
 
-def calc_est_y(x_poi, x,y, x1, y1):
+def calc_est_y(x_poi, x_before,y_before, x1_after, y1_after):
     """
     Calculate an estimate value for y for our x value Point of Interest
 
@@ -116,8 +113,8 @@ def calc_est_y(x_poi, x,y, x1, y1):
     :param y1: y value after _poi
     :return: Estimate of y value at that time
     """
-    m = _calc_slope(x,y,x1,y1)
-    b = _calc_y_incpt(m,x,y)
+    m = _calc_slope(x_before,y_before,x1_after,y1_after)
+    b = _calc_y_incpt(m,x_before,y_before)
     return _calc_y_value(m, x_poi, b)
 
 
@@ -134,7 +131,7 @@ def convert(str):
     return unixtime
 
 
-# TODO: in-> epoch out->epoch or datetime->datime
+# TODO: in-> epoch out->epoch or datetime->dateime
 def init_axvlines(min, max):
     """
     Creates an array of date markers in epoch time  from a start and end date
@@ -150,9 +147,8 @@ def init_axvlines(min, max):
     # indicate the the start of the first day
     cur = datetime.fromtimestamp(min)
     cur = cur.replace(hour=0, minute=0, second=0, microsecond=0)
-
-
     output.append(cur.timestamp())
+
     #TODO: only work on datetime objects and
     while(cur.timestamp() < max):
         cur = cur + timedelta(days=1)
@@ -161,37 +157,37 @@ def init_axvlines(min, max):
     return output
 
 
-for x in t:
-    date = datetime.strptime(x, "%m/%d/%y %H:%M")
-    dates.append(date)
+def main():
+    for x in t:
+        date = datetime.strptime(x, "%m/%d/%y %H:%M")
+        dates.append(date)
 
-start = convert(t[0])
-end = convert(t[-1])
+    start = convert(t[0])
+    end = convert(t[-1])
 
-axvlines_raw = init_axvlines(start, end)
-for x in axvlines_raw:
-    axvlines.append(datetime.fromtimestamp(x))
+    axvlines_raw = init_axvlines(start, end)
+    for x in axvlines_raw:
+        axvlines.append(datetime.fromtimestamp(x))
 
-print(dates)
+    # plots dates on x, energy usage on y
 
-# plots dates on x, energy usage on y
+    fig, ax = plt.subplots()
+    # format x-axis values
+    xfmt = mdates.DateFormatter('%d-%m %H:%M')
+    ax.xaxis.set_major_formatter(xfmt)
 
-fig, ax = plt.subplots()
-# format x-axis values
-xfmt = mdates.DateFormatter('%d-%m %H:%M')
-ax.xaxis.set_major_formatter(xfmt)
+    plt.xticks(rotation=90)
 
-plt.xticks(rotation=90)
+    plt.plot(dates, e)
+    plt.xticks(dates,fontsize='small')
 
-plt.plot(dates, e)
-plt.xticks(dates,fontsize='small')
-
-# graphs verticle lines for reference of days
-for x in axvlines:
-    plt.axvline(x=x, color='red', linestyle='--')
-
-
-plt.show()
+    # graphs verticle lines for reference of days
+    for x in axvlines:
+        plt.axvline(x=x, color='red', linestyle='--')
 
 
+    plt.show()
+
+if __name__ == '__main__':
+    main()
 
