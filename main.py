@@ -10,8 +10,9 @@ import numpy as np
 # TODO: fix timezone issues
 # TODO: meter reading automation (open CV or ML)
 # TODO: automate the creation of axvlines
+# TODO: formalize/standardize comment style
 
-# stores processed dates in epoch time
+# stores processed dates datetime objects
 dates = []
 # stores lines verticle lines for graph
 axvlines_raw = []
@@ -118,7 +119,7 @@ def calc_est_y(x_poi, x_before,y_before, x1_after, y1_after):
     return _calc_y_value(m, x_poi, b)
 
 
-def convert(str):
+def date_str_to_epoch(str):
     """
     Converts from d/m/yy hh:mm to epoch time
     
@@ -156,14 +157,23 @@ def init_axvlines(min, max):
 
     return output
 
+def usage_estimates(dates, meter_values):
+    """
+
+    :param dates: list(datetime obj) m
+    :param meter_values: list(int) meter values for given dates
+    :return: {datetime : (int)}
+    """
+    # for a given date, find midnight on both sides and use that to estimate daily usage
+    pass
 
 def main():
     for x in t:
         date = datetime.strptime(x, "%m/%d/%y %H:%M")
         dates.append(date)
 
-    start = convert(t[0])
-    end = convert(t[-1])
+    start = date_str_to_epoch(t[0])
+    end = date_str_to_epoch(t[-1])
 
     axvlines_raw = init_axvlines(start, end)
     for x in axvlines_raw:
@@ -181,7 +191,7 @@ def main():
     plt.plot(dates, e)
     plt.xticks(dates,fontsize='small')
 
-    # graphs verticle lines for reference of days
+    # graphs vertical lines for reference of days
     for x in axvlines:
         plt.axvline(x=x, color='red', linestyle='--')
 
