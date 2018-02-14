@@ -20,68 +20,70 @@ axvlines_raw = []
 axvlines = []
 # stores times
 t = [
-"2/5/18 0:00",
-"2/7/18 18:58",
-"2/7/18 23:16",
-"2/8/18 0:00",
-"2/8/18 8:05",
-"2/8/18 8:52",
-"2/8/18 18:30",
-"2/8/18 20:35",
-"2/8/18 23:17",
-"2/9/18 8:36",
-"2/9/18 16:35",
-"2/9/18 18:31",
-"2/9/18 21:12",
-"2/9/18 23:12",
-"2/10/18 7:13",
-"2/10/18 18:23",
-"2/10/18 19:33",
-"2/10/18 20:37",
-"2/10/18 22:01",
-"2/10/18 22:36",
-"2/11/18 9:45",
-"2/11/18 12:06",
-"2/11/18 18:29",
-"2/12/18 8:37",
-"2/12/18 18:05",
-"2/12/18 19:19"
+    "2/5/18 0:00",
+    "2/7/18 18:58",
+    "2/7/18 23:16",
+    "2/8/18 0:00",
+    "2/8/18 8:05",
+    "2/8/18 8:52",
+    "2/8/18 18:30",
+    "2/8/18 20:35",
+    "2/8/18 23:17",
+    "2/9/18 8:36",
+    "2/9/18 16:35",
+    "2/9/18 18:31",
+    "2/9/18 21:12",
+    "2/9/18 23:12",
+    "2/10/18 7:13",
+    "2/10/18 18:23",
+    "2/10/18 19:33",
+    "2/10/18 20:37",
+    "2/10/18 22:01",
+    "2/10/18 22:36",
+    "2/11/18 9:45",
+    "2/11/18 12:06",
+    "2/11/18 18:29",
+    "2/12/18 8:37",
+    "2/12/18 18:05",
+    "2/12/18 19:19"
 
 ]
 # stores energy meter readings (kWh)
 e = [
-52864,
-52900,
-52901,
-52901,
-52903,
-52903,
-52903,
-52906,
-52907,
-52909,
-52911,
-52912,
-52914,
-52917,
-52919,
-52922,
-52922,
-52925,
-52925,
-52926,
-52930,
-52935,
-52939,
-52944,
-52950,
-52952
+    52864,
+    52900,
+    52901,
+    52901,
+    52903,
+    52903,
+    52903,
+    52906,
+    52907,
+    52909,
+    52911,
+    52912,
+    52914,
+    52917,
+    52919,
+    52922,
+    52922,
+    52925,
+    52925,
+    52926,
+    52930,
+    52935,
+    52939,
+    52944,
+    52950,
+    52952
 
 ]
 
 """
 HELPER FUNCTIONS
 """
+
+
 def _calc_slope(x,y,x1,y1):
     return (x1 - x)/(y1 - y)
 
@@ -108,10 +110,10 @@ def calc_est_y(x_poi, x_before,y_before, x1_after, y1_after):
     2. plug in x to find y
 
     :param x_poi: x value we want to find y for
-    :param x: x value before x_poi
-    :param y: y value before x_poi
-    :param x1: x value after x_poi
-    :param y1: y value after _poi
+    :param x_before: x value before x_poi
+    :param y_before: y value before x_poi
+    :param x1_after: x value after x_poi
+    :param y1_after: y value after _poi
     :return: Estimate of y value at that time
     """
     m = _calc_slope(x_before,y_before,x1_after,y1_after)
@@ -157,6 +159,7 @@ def init_axvlines(min, max):
 
     return output
 
+
 def usage_estimates(dates, meter_values):
     """
 
@@ -165,7 +168,9 @@ def usage_estimates(dates, meter_values):
     :return: {datetime : (int)}
     """
     # for a given date, find midnight on both sides and use that to estimate daily usage
-    pass
+
+    # find the closest date
+
 
 def main():
     for x in t:
@@ -195,8 +200,8 @@ def main():
     for x in axvlines:
         plt.axvline(x=x, color='red', linestyle='--')
 
-
     plt.show()
+
 
 if __name__ == '__main__':
     main()
