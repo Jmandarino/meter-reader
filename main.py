@@ -244,6 +244,10 @@ def main():
     pairs = (usage_estimates(axvlines, dates, e))
     est_x, est_y = zip(*pairs)
 
+    for x in range(2,len(pairs)):
+        print(pairs[x][1] - pairs[x - 1][1])
+
+
     # plots dates on x, energy usage on y
     fig, ax = plt.subplots()
     # format x-axis values
@@ -252,7 +256,7 @@ def main():
 
     plt.xticks(rotation=90)
 
-    plt.plot(dates, e)
+    # plt.plot(dates, e)
     # plot estimates
     plt.plot(est_x, est_y, color="black")
     plt.xticks(dates,fontsize='small')
