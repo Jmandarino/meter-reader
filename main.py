@@ -11,6 +11,7 @@ import numpy as np
 # TODO: meter reading automation (open CV or ML)
 # TODO: automate the creation of axvlines
 # TODO: formalize/standardize comment style
+# TODO: unify dates and meter reading
 
 # stores processed dates datetime objects
 dates = []
@@ -96,6 +97,12 @@ def _calc_y_value(slope, x, b):
     return slope * x + b
 
 
+def _is_between(date_tagert, date_before, date_after):
+    return date_before < date_tagert and date_after > date_tagert
+
+
+
+
 """
 FUNCTIONS
 """
@@ -140,7 +147,7 @@ def init_axvlines(min, max):
     Creates an array of date markers in epoch time  from a start and end date
     :param min: start date (in epoch time)
     :param max: end date (in epoch time)
-    :return:
+    :return: list() of timestamps
     """
     if min == None or min == max:
         return []
@@ -160,6 +167,32 @@ def init_axvlines(min, max):
     return output
 
 
+def time_before_after(dates, target):
+    """
+    :param dates: list of datetime objects
+    :param target: datetime object
+    :return: datetime before and datetime after
+    """
+    # take care of edge case
+
+    if dates == [] or target == None:
+        return None, None
+
+    # if target is either smaller than or greater than date range
+    if dates[0] > target:
+        return None, dates[0]
+    elif dates[-1] < target:
+        return dates[-1], None
+
+    # maybe binary search?
+    start = 0
+    while start < len(dates) :
+        if _is_between(target, dates[start], dates[start+1]):
+            return dates[start], dates[start + 1]
+        else:
+            start += 1
+
+
 def usage_estimates(dates, meter_values):
     """
 
@@ -168,7 +201,6 @@ def usage_estimates(dates, meter_values):
     :return: {datetime : (int)}
     """
     # for a given date, find midnight on both sides and use that to estimate daily usage
-
     # find the closest date
 
 
