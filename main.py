@@ -240,11 +240,11 @@ def main():
     for x in axvlines_raw:
         axvlines.append(datetime.fromtimestamp(x))
 
-    # plots dates on x, energy usage on y
-
+    # gets estimated usage
     pairs = (usage_estimates(axvlines, dates, e))
-    print(pairs)
     est_x, est_y = zip(*pairs)
+
+    # plots dates on x, energy usage on y
     fig, ax = plt.subplots()
     # format x-axis values
     xfmt = mdates.DateFormatter('%d-%m %H:%M')
@@ -253,7 +253,8 @@ def main():
     plt.xticks(rotation=90)
 
     plt.plot(dates, e)
-    plt.plot(est_x, est_y)
+    # plot estimates
+    plt.plot(est_x, est_y, color="black")
     plt.xticks(dates,fontsize='small')
 
     # graphs vertical lines for reference of days
