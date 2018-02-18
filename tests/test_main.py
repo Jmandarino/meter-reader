@@ -3,12 +3,12 @@ from main import time_before_after
 
 from datetime import datetime
 
+
 class Test_time_before_after(TestCase):
 
     def test__time_before_after(self):
-
         # test if we only have 1 date before the given target
-        before_date = datetime(2015,1,1)
+        before_date = datetime(2015, 1, 1)
         after_date = datetime(3000, 1, 1)
         date1, date2 = time_before_after([before_date], datetime.now())
 
@@ -21,7 +21,6 @@ class Test_time_before_after(TestCase):
         self.assertEquals(date1, None)
         self.assertEquals(date2, after_date)
 
-
         # if between dates return those dates
         date1, date2 = time_before_after([before_date, after_date], datetime.now())
 
@@ -30,7 +29,7 @@ class Test_time_before_after(TestCase):
 
         # test multiple dates
 
-        immed_before = datetime(2016,1,1)
+        immed_before = datetime(2016, 1, 1)
         immed_after = datetime(2100, 1, 1)
 
         date1, date2 = time_before_after([before_date, immed_before, immed_after, after_date], datetime.now())
@@ -38,14 +37,11 @@ class Test_time_before_after(TestCase):
         self.assertEquals(date1, immed_before)
         self.assertEquals(date2, immed_after)
 
+        # didn't test for values that are equal within the list
+        # eg if the target == a value in the list
+        # target = 3 list = [1,2,3]
 
 
-
-
-
-
-
-
-
-
-
+class TestUsage_estimates(TestCase):
+    def test_usage_estimates(self):
+        pass

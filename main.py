@@ -12,6 +12,7 @@ import numpy as np
 # TODO: automate the creation of axvlines
 # TODO: formalize/standardize comment style
 # TODO: unify dates and meter reading
+# TODO: should target values come first or last in method calls
 
 # stores processed dates datetime objects
 dates = []
@@ -86,7 +87,7 @@ HELPER FUNCTIONS
 
 
 def _calc_slope(x,y,x1,y1):
-    return (x1 - x)/(y1 - y)
+    return (y1 - y)/(x1 - x)
 
 
 def _calc_y_incpt(slope, x, y):
@@ -109,7 +110,7 @@ FUNCTIONS
 # TODO: fix the format to be more readable
 
 
-def calc_est_y(x_poi, x_before,y_before, x1_after, y1_after):
+def calc_est_y(x_poi, x_before, y_before, x_after, y_after):
     """
     Calculate an estimate value for y for our x value Point of Interest
 
@@ -119,11 +120,11 @@ def calc_est_y(x_poi, x_before,y_before, x1_after, y1_after):
     :param x_poi: x value we want to find y for
     :param x_before: x value before x_poi
     :param y_before: y value before x_poi
-    :param x1_after: x value after x_poi
-    :param y1_after: y value after _poi
+    :param x_after: x value after x_poi
+    :param y_after: y value after _poi
     :return: Estimate of y value at that time
     """
-    m = _calc_slope(x_before,y_before,x1_after,y1_after)
+    m = _calc_slope(x_before, y_before, x_after, y_after)
     b = _calc_y_incpt(m,x_before,y_before)
     return _calc_y_value(m, x_poi, b)
 
@@ -174,34 +175,57 @@ def time_before_after(dates, target):
     :return: datetime before and datetime after
     """
     # take care of edge case
-
     if dates == [] or target == None:
         return None, None
 
     # if target is either smaller than or greater than date range
-    if dates[0] > target:
+    if dates[0] >= target:
         return None, dates[0]
-    elif dates[-1] < target:
+    elif dates[-1] <= target:
         return dates[-1], None
 
     # maybe binary search?
     start = 0
     while start < len(dates) :
+
         if _is_between(target, dates[start], dates[start+1]):
             return dates[start], dates[start + 1]
+        elif dates[start] ==  target:
+            return dates[start], dates[start]
         else:
             start += 1
 
 
-def usage_estimates(dates, meter_values):
+def usage_estimates(dates, samples_dates, meter_values):
     """
-
-    :param dates: list(datetime obj) m
+    :param dates: list(datetime obj) dates we are interested, should be axvlines
+    :param samples_dates: list(datetime obj) dates that corrispond to meter_values
     :param meter_values: list(int) meter values for given dates
     :return: {datetime : (int)}
     """
+    date_pairs = []
     # for a given date, find midnight on both sides and use that to estimate daily usage
     # find the closest date
+    data = dict(zip(samples_dates, meter_values))
+    # can this be done more efficiently with binary search or by limiting size of array
+    for date in dates:
+        before, after = time_before_after(samples_dates, date)
+
+        # if we don't have complete data don't process
+        if before is None or after is None:
+            continue
+
+        # if the time value is a value in our samples_dates
+        if before == after:
+            date_pairs.append((before, data[before]))
+        else:
+            y_before = data[before]
+            y_after = data[after]
+
+            y = calc_est_y(date.timestamp(), before.timestamp(), y_before, after.timestamp(), y_after)
+            date_pairs.append((date, y))
+
+    return date_pairs
 
 
 def main():
@@ -218,6 +242,9 @@ def main():
 
     # plots dates on x, energy usage on y
 
+    pairs = (usage_estimates(axvlines, dates, e))
+    print(pairs)
+    est_x, est_y = zip(*pairs)
     fig, ax = plt.subplots()
     # format x-axis values
     xfmt = mdates.DateFormatter('%d-%m %H:%M')
@@ -226,6 +253,7 @@ def main():
     plt.xticks(rotation=90)
 
     plt.plot(dates, e)
+    plt.plot(est_x, est_y)
     plt.xticks(dates,fontsize='small')
 
     # graphs vertical lines for reference of days
