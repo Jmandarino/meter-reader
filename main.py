@@ -16,7 +16,7 @@ import numpy as np
 
 # stores processed dates datetime objects
 dates = []
-# stores lines verticle lines for graph
+# stores lines vertical lines for graph
 axvlines_raw = []
 # stores processed lines (times converted to epoch time)
 axvlines = []
@@ -112,7 +112,7 @@ HELPER FUNCTIONS
 """
 
 
-def _calc_slope(x,y,x1,y1):
+def _calc_slope(x, y, x1, y1):
     return (y1 - y)/(x1 - x)
 
 
@@ -124,10 +124,8 @@ def _calc_y_value(slope, x, b):
     return slope * x + b
 
 
-def _is_between(date_tagert, date_before, date_after):
-    return date_before < date_tagert and date_after > date_tagert
-
-
+def _is_between(date_target, date_before, date_after):
+    return date_before < date_target > date_after
 
 
 """
@@ -151,32 +149,32 @@ def calc_est_y(x_poi, x_before, y_before, x_after, y_after):
     :return: Estimate of y value at that time
     """
     m = _calc_slope(x_before, y_before, x_after, y_after)
-    b = _calc_y_incpt(m,x_before,y_before)
+    b = _calc_y_incpt(m, x_before, y_before)
     return _calc_y_value(m, x_poi, b)
 
 
-def date_str_to_epoch(str):
+def date_str_to_epoch(string):
     """
     Converts from d/m/yy hh:mm to epoch time
     
-    :param str: inputed time as a string
+    :param string: inputted time as a string
     :return: time in epoch time
     """
     # 2/5/18 00:00"
-    d = datetime.strptime(str, "%m/%d/%y %H:%M")
+    d = datetime.strptime(string, "%m/%d/%y %H:%M")
     unixtime = time.mktime(d.timetuple())
     return unixtime
 
 
 # TODO: in-> epoch out->epoch or datetime->dateime
-def init_axvlines(min, max):
+def init_axvlines(min_, max_):
     """
     Creates an array of date markers in epoch time  from a start and end date
-    :param min: start date (in epoch time)
-    :param max: end date (in epoch time)
+    :param min_: start date (in epoch time)
+    :param max_: end date (in epoch time)
     :return: list() of timestamps
     """
-    if min == None or min == max:
+    if min_ is None or min_ == max_:
         return []
 
     output = []
@@ -186,8 +184,8 @@ def init_axvlines(min, max):
     cur = cur.replace(hour=0, minute=0, second=0, microsecond=0)
     output.append(cur.timestamp())
 
-    #TODO: only work on datetime objects and
-    while(cur.timestamp() < max):
+    # TODO: only work on datetime objects and
+    while cur.timestamp() < max:
         cur = cur + timedelta(days=1)
         output.append(cur.timestamp())
 
@@ -201,7 +199,7 @@ def time_before_after(dates, target):
     :return: datetime before and datetime after
     """
     # take care of edge case
-    if dates == [] or target == None:
+    if dates == [] or target is None:
         return None, None
 
     # if target is either smaller than or greater than date range
@@ -212,11 +210,11 @@ def time_before_after(dates, target):
 
     # maybe binary search?
     start = 0
-    while start < len(dates) :
+    while start < len(dates):
 
         if _is_between(target, dates[start], dates[start+1]):
             return dates[start], dates[start + 1]
-        elif dates[start] ==  target:
+        elif dates[start] == target:
             return dates[start], dates[start]
         else:
             start += 1
@@ -262,6 +260,7 @@ def main():
     start = date_str_to_epoch(t[0])
     end = date_str_to_epoch(t[-1])
 
+    global axvlines_raw
     axvlines_raw = init_axvlines(start, end)
     for x in axvlines_raw:
         axvlines.append(datetime.fromtimestamp(x))
@@ -272,7 +271,6 @@ def main():
 
     for x in range(2,len(pairs)):
         print(pairs[x][1] - pairs[x - 1][1])
-
 
     # plots dates on x, energy usage on y
     fig, ax = plt.subplots()
@@ -285,7 +283,7 @@ def main():
     plt.plot(dates, e)
     # plot estimates
     plt.plot(est_x, est_y, color="black")
-    plt.xticks(dates,fontsize='small')
+    plt.xticks(dates, fontsize='small')
 
     # graphs vertical lines for reference of days
     for x in axvlines:
