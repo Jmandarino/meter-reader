@@ -273,8 +273,13 @@ def main():
     pairs = (usage_estimates(axvlines, dates, e))
     est_x, est_y = zip(*pairs)
 
+    # pairs (date, meter_reading)
+    daily_increase = []
     for x in range(2,len(pairs)):
-        print(pairs[x][1] - pairs[x - 1][1])
+        increase = pairs[x][1] - pairs[x - 1][1]
+        daily_increase.append(increase)
+        print(increase)
+    print("Daily Average:" + str(sum(daily_increase)/float(len(daily_increase))))
 
     # plots dates on x, energy usage on y
     fig, ax = plt.subplots()
