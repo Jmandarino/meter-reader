@@ -60,7 +60,9 @@ t = [
     "2/17/18 19:12",
     "2/18/18 8:34",
     "2/18/18 20:50",
-    "2/19/18 8:30"
+    "2/19/18 8:30",
+    "2/19/18 18:28",
+    "2/20/18 8:29"
 
 ]
 # stores energy meter readings (kWh)
@@ -103,7 +105,9 @@ e = [
     53010,
     53015,
     53021,
-    53025
+    53025,
+    53029,
+    53034,
 
 ]
 
@@ -125,7 +129,7 @@ def _calc_y_value(slope, x, b):
 
 
 def _is_between(date_target, date_before, date_after):
-    return date_before < date_target > date_after
+    return date_before < date_target < date_after
 
 
 """
@@ -180,12 +184,12 @@ def init_axvlines(min_, max_):
     output = []
     # get the midnight value (12:01/0:01) for the start time
     # indicate the the start of the first day
-    cur = datetime.fromtimestamp(min)
+    cur = datetime.fromtimestamp(min_)
     cur = cur.replace(hour=0, minute=0, second=0, microsecond=0)
     output.append(cur.timestamp())
 
     # TODO: only work on datetime objects and
-    while cur.timestamp() < max:
+    while cur.timestamp() < max_:
         cur = cur + timedelta(days=1)
         output.append(cur.timestamp())
 
