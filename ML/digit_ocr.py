@@ -194,6 +194,7 @@ if __name__ == '__main__':
         # if w > 80 and h > 80:
         #     cv2.rectangle(output, (x,y), (x+w,y+h), (255, 0, 0), 2)
 
+    thresh_crop = thresh[min_y -5 :max_y+5, min_x-5:max_x+5]
     if max_x - min_x > 0 and max_y - min_y > 0:
         cv2.rectangle(output, (min_x, min_y), (max_x, max_y), (255, 0, 0), 2)
     # for cnt in digitCnts:
@@ -202,10 +203,9 @@ if __name__ == '__main__':
     #     # draw it in red color
     #     cv2.drawContours(output, [hull], -1, (0, 0, 255), 1)
 
-
-    cv2.drawContours(output, digitCnts, -1, (0, 255, 0), 1)
-    cv2.imshow("output without drawcontours()", output)
-    cv2.waitKey(0)
+    # cv2.drawContours(output, digitCnts, -1, (0, 255, 0), 1)
+    # cv2.imshow("output without drawcontours()", output)
+    # cv2.waitKey(0)
 
 
     #
@@ -216,9 +216,13 @@ if __name__ == '__main__':
     # TODO: get path to this file
     os.environ["TESSDATA_PREFIX"] = "/Users/joey/PycharmProjects/meter-reader/ML/tessdata"
 
-    otsu_thresh_image = thresh #PIL.Image.fromarray(thresh)
 
-    out = image_to_string(otsu_thresh_image, lang="letsgodigital", config="-psm 100 -c tessedit_char_whitelist=.0123456789")
+    # cv2.drawContours(output, digitCnts, -1, (0, 255, 0), 1)
+    # cv2.imshow("output without drawcontours()", thresh_crop)
+    # cv2.waitKey(0)
+    otsu_thresh_image = thresh_crop #PIL.Image.fromarray(thresh)
+
+    out = image_to_string(otsu_thresh_image, lang="letsgodigital", config="-psm 8 -c tessedit_char_whitelist=0123456789")
 
     print("printing::::")
     print(out)
