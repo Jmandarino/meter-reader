@@ -143,13 +143,23 @@ def trim(im):
 
 if __name__ == '__main__':
 
-    display, output = process_image_2('test.jpg')
+    display, output = process_image_2('test2.jpg')
+
+    # cv2.imshow("output without drawcontours()", output)
+    # cv2.waitKey(0)
 
     thresh = cv2.threshold(display, 0, 255,
                                cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
 
+    # cv2.imshow("output without drawcontours()", thresh)
+    # cv2.waitKey(0)
+
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (1, 5))
-    thresh = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel)
+    # thresh = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel)
+
+
+    # cv2.imshow("output without drawcontours()", thresh)
+    # cv2.waitKey(0)
 
     thresh_copy = thresh.copy()
     thresh_copy = cv2.dilate(thresh_copy, kernel, iterations=1)
@@ -194,7 +204,7 @@ if __name__ == '__main__':
         # if w > 80 and h > 80:
         #     cv2.rectangle(output, (x,y), (x+w,y+h), (255, 0, 0), 2)
 
-    thresh_crop = thresh[min_y -5 :max_y+5, min_x-5:max_x+5]
+    thresh_crop = thresh[min_y -2 :max_y+2, min_x-2:max_x+2]
     if max_x - min_x > 0 and max_y - min_y > 0:
         cv2.rectangle(output, (min_x, min_y), (max_x, max_y), (255, 0, 0), 2)
     # for cnt in digitCnts:
@@ -203,12 +213,11 @@ if __name__ == '__main__':
     #     # draw it in red color
     #     cv2.drawContours(output, [hull], -1, (0, 0, 255), 1)
 
-    # cv2.drawContours(output, digitCnts, -1, (0, 255, 0), 1)
-    # cv2.imshow("output without drawcontours()", output)
-    # cv2.waitKey(0)
+    cv2.drawContours(output, digitCnts, -1, (0, 255, 0), 1)
+    cv2.imshow("output without drawcontours()", output)
+    cv2.waitKey(0)
 
 
-    #
     # np.set_printoptions(threshold=np.nan)
     # out = open('whites.txt','w')
     # out.write(str(whites))
@@ -218,6 +227,8 @@ if __name__ == '__main__':
 
 
     # cv2.drawContours(output, digitCnts, -1, (0, 255, 0), 1)
+    # thresh_crop = cv2.dilate(thresh_crop, kernel, iterations=1)
+    thresh_crop = cv2.bitwise_not(thresh_crop)
     # cv2.imshow("output without drawcontours()", thresh_crop)
     # cv2.waitKey(0)
     otsu_thresh_image = thresh_crop #PIL.Image.fromarray(thresh)
