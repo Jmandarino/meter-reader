@@ -153,8 +153,8 @@ if __name__ == '__main__':
 
     thresh_copy = thresh.copy()
     thresh_copy = cv2.dilate(thresh_copy, kernel, iterations=1)
-    # cnts1 = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
-    _, cnts, _ = cv2.findContours(thresh_copy, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    _, cnts, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+    #_, cnts, hierarchy = cv2.findContours(thresh_copy, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
     # cnts = cnts[0] if imutils.is_cv2() else cnts[1]
     digitCnts = []
@@ -162,6 +162,45 @@ if __name__ == '__main__':
         (x, y, w, h) = cv2.boundingRect(c)
         if w > 3 and h > 10:
             digitCnts.append(c)
+
+    cnt = digitCnts[0]
+
+    # dig_flat = digitCnts.flatten()
+    # cnt = dig_flat[0]
+
+    # hull = cv2.convexHull(cnt,returnPoints = False)
+    # defects = cv2.convexityDefects(cnt,hull)
+    #
+    # for i in range(defects.shape[0]):
+    #     s,e,f,d = defects[i,0]
+    #     start = tuple(cnt[s][0])
+    #     end = tuple(cnt[e][0])
+    #     far = tuple(cnt[f][0])
+    #     cv2.line(output,start,end,[0,255,0],2)
+    #     cv2.circle(output,far,5,[0,0,255],-1)
+
+    try: hierarchy = hierarchy[0]
+    except: hierarchy = []
+
+    height, width, _ = output.shape
+    min_x, min_y = width, height
+    max_x = max_y = 0
+
+    # computes the bounding box for the contour, and draws it on the frame,
+    for contour, hier in zip(digitCnts, hierarchy):
+        (x,y,w,h) = cv2.boundingRect(contour)
+        min_x, max_x = min(x, min_x), max(x+w, max_x)
+        min_y, max_y = min(y, min_y), max(y+h, max_y)
+        # if w > 80 and h > 80:
+        #     cv2.rectangle(output, (x,y), (x+w,y+h), (255, 0, 0), 2)
+
+    if max_x - min_x > 0 and max_y - min_y > 0:
+        cv2.rectangle(output, (min_x, min_y), (max_x, max_y), (255, 0, 0), 2)
+    # for cnt in digitCnts:
+    #     # get convex hull
+    #     hull = cv2.convexHull(cnt)
+    #     # draw it in red color
+    #     cv2.drawContours(output, [hull], -1, (0, 0, 255), 1)
 
 
     cv2.drawContours(output, digitCnts, -1, (0, 255, 0), 1)
