@@ -253,10 +253,13 @@ if __name__ == '__main__':
     for c in digitCnts[::-1]:
         # extract the digit ROI
         (x, y, w, h) = cv2.boundingRect(c)
-        roi = out_crop[y:y + h, x:x + w]
+        roi = thresh[y:y + h, x:x + w]
+        cv2.imwrite("test.bmp", roi)
         otsu_thresh_image = PIL.Image.fromarray(roi)
         out = image_to_string(otsu_thresh_image, lang="letsgodigital", config="-psm 9 -c tessedit_char_whitelist=0123456789")
         output_list.append(out)
+
+
         #TODO: MNIST dataset
 
     print(output_list)
