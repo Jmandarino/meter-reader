@@ -6,6 +6,8 @@ from pytesseract import image_to_string
 import PIL
 from imutils.perspective import four_point_transform
 import os
+from imutils import contours
+
 
 
 def take_picture(should_save=False, d_id=0):
@@ -143,7 +145,7 @@ def trim(im):
 
 if __name__ == '__main__':
 
-    display, output = process_image_2('test2.jpg')
+    display, output = process_image_2('test.jpg')
 
     # cv2.imshow("output without drawcontours()", output)
     # cv2.waitKey(0)
@@ -162,7 +164,8 @@ if __name__ == '__main__':
     # cv2.waitKey(0)
 
     thresh_copy = thresh.copy()
-    thresh_copy = cv2.dilate(thresh_copy, kernel, iterations=1)
+    thresh_copy = cv2.dilate(thresh_copy, kernel, iterations=2)
+    # thresh_copy = cv2.erode(thresh_copy, kernel, iterations=2)
     _, cnts, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
     #_, cnts, hierarchy = cv2.findContours(thresh_copy, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -170,24 +173,10 @@ if __name__ == '__main__':
     digitCnts = []
     for c in cnts:
         (x, y, w, h) = cv2.boundingRect(c)
-        if w > 3 and h > 10:
+        if w > 4 and h > 12:
             digitCnts.append(c)
 
     cnt = digitCnts[0]
-
-    # dig_flat = digitCnts.flatten()
-    # cnt = dig_flat[0]
-
-    # hull = cv2.convexHull(cnt,returnPoints = False)
-    # defects = cv2.convexityDefects(cnt,hull)
-    #
-    # for i in range(defects.shape[0]):
-    #     s,e,f,d = defects[i,0]
-    #     start = tuple(cnt[s][0])
-    #     end = tuple(cnt[e][0])
-    #     far = tuple(cnt[f][0])
-    #     cv2.line(output,start,end,[0,255,0],2)
-    #     cv2.circle(output,far,5,[0,0,255],-1)
 
     try: hierarchy = hierarchy[0]
     except: hierarchy = []
@@ -204,37 +193,94 @@ if __name__ == '__main__':
         # if w > 80 and h > 80:
         #     cv2.rectangle(output, (x,y), (x+w,y+h), (255, 0, 0), 2)
 
-    thresh_crop = thresh[min_y -2 :max_y+2, min_x-2:max_x+2]
-    if max_x - min_x > 0 and max_y - min_y > 0:
-        cv2.rectangle(output, (min_x, min_y), (max_x, max_y), (255, 0, 0), 2)
-    # for cnt in digitCnts:
-    #     # get convex hull
-    #     hull = cv2.convexHull(cnt)
-    #     # draw it in red color
-    #     cv2.drawContours(output, [hull], -1, (0, 0, 255), 1)
-
-    cv2.drawContours(output, digitCnts, -1, (0, 255, 0), 1)
-    cv2.imshow("output without drawcontours()", output)
-    cv2.waitKey(0)
+    thresh_crop = thresh[min_y:max_y, min_x:max_x]
+    out_crop = output[min_y:max_y , min_x:max_x]
+    # cv2.imshow("output without drawcontours()", out_crop)
+    # cv2.waitKey(0)
 
 
-    # np.set_printoptions(threshold=np.nan)
-    # out = open('whites.txt','w')
-    # out.write(str(whites))
-    # out.close()
+
+    kernel = np.ones((1,1),np.uint8)
+    # thresh_crop = cv2.erode(thresh_crop, kernel, iterations=2)
+    # thresh_crop = cv2.dilate(thresh_crop, kernel, iterations=2)
+    # thresh_crop = cv2.morphologyEx(thresh_crop, cv2.MORPH_CLOSE, kernel)
+
+
+    # refind contours after croping image
+    gray = cv2.cvtColor(out_crop, cv2.COLOR_BGR2GRAY)
+    thresh = cv2.threshold(gray, 0, 255,
+                           cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+
+    # remove noise
+    kernel = np.ones((1,1),np.uint8)
+    thresh = cv2.erode(thresh, kernel, iterations=2)
+    kernel = np.ones((1,1),np.uint8)
+    thresh = cv2.dilate(thresh, kernel, iterations=5)
+
+    # make them longer
+    kernel = np.ones((3,1),np.uint8)
+    thresh = cv2.dilate(thresh, kernel, iterations=1)
+
+
+    # kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (1, 5))
+    # thresh = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
+
+    thresh = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
+
+    # cv2.drawContours(thresh, digitCnts, -1, (0,255,0), 1)
+    # cv2.imshow("output without drawcontours()", thresh)
+    # cv2.waitKey(0)
+
+    # thresh = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
+    _, cnts, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+
+
+    digitCnts = []
+    boxes = []
+    for c in cnts:
+        (x, y, w, h) = cv2.boundingRect(c)
+        if w > 4 and h > 12:
+            digitCnts.append(c)
+
+    # process the image 2 times, first time gets a close contour
+    # TODO: get path to this file
+    os.environ["TESSDATA_PREFIX"] = "/Users/joey/PycharmProjects/meter-reader/ML/tessdata"
+
+    # process individual characters
+    output_list = []
+    digitCnts = contours.sort_contours(digitCnts,
+                                 method="left-to-right")[0]
+    for c in digitCnts[::-1]:
+        # extract the digit ROI
+        (x, y, w, h) = cv2.boundingRect(c)
+        roi = out_crop[y:y + h, x:x + w]
+        otsu_thresh_image = PIL.Image.fromarray(roi)
+        out = image_to_string(otsu_thresh_image, lang="letsgodigital", config="-psm 9 -c tessedit_char_whitelist=0123456789")
+        output_list.append(out)
+        #TODO: MNIST dataset
+
+    print(output_list)
+    exit(0)
+
+
+
+
+
+
     # TODO: get path to this file
     os.environ["TESSDATA_PREFIX"] = "/Users/joey/PycharmProjects/meter-reader/ML/tessdata"
 
 
-    # cv2.drawContours(output, digitCnts, -1, (0, 255, 0), 1)
-    # thresh_crop = cv2.dilate(thresh_crop, kernel, iterations=1)
-    thresh_crop = cv2.bitwise_not(thresh_crop)
+    # thresh_crop = cv2.bitwise_not(thresh_crop)
+    # cv2.imwrite("out_crop.bmp", thresh_crop)
+    # cv2.drawContours(thresh_crop, digitCnts, -1, (0,255,0), 1)
     # cv2.imshow("output without drawcontours()", thresh_crop)
     # cv2.waitKey(0)
-    otsu_thresh_image = thresh_crop #PIL.Image.fromarray(thresh)
+    otsu_thresh_image = PIL.Image.fromarray(out_crop)
 
-    out = image_to_string(otsu_thresh_image, lang="letsgodigital", config="-psm 8 -c tessedit_char_whitelist=0123456789")
 
+    out = image_to_string(otsu_thresh_image, lang="letsgodigital", config="-psm 7 -c tessedit_char_whitelist=0123456789")
+    # out = image_to_string(otsu_thresh_image,boxes=False)
     print("printing::::")
     print(out)
     exit(0)
