@@ -9,7 +9,6 @@ import numpy as np
 # TODO: python-dateutil for parsing and handling timezones
 # TODO: fix timezone issues
 # TODO: meter reading automation (open CV or ML)
-# TODO: automate the creation of axvlines
 # TODO: formalize/standardize comment style
 # TODO: unify dates and meter reading
 # TODO: should target values come first or last in method calls
@@ -75,7 +74,8 @@ t = [
     "2/25/18 11:13",
     "2/25/18 16:15",
     "2/25/18 21:35",
-    "2/26/18 9:05"
+    "2/26/18 9:05",
+    "2/27/18 8:38",
 ]
 # stores energy meter readings (kWh)
 e = [
@@ -132,7 +132,8 @@ e = [
     53102,
     53104,
     53107,
-    53112
+    53112,
+    53117
 
 
 
