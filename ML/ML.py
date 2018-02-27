@@ -3,6 +3,7 @@
 Created on Sat Nov 21 14:38:53 2015
 
 @author: Pavitrakumar
+Edited by: Jmandarino
 
 """
 
@@ -21,9 +22,16 @@ IMG_HEIGHT = 28
 IMG_WIDTH = 28
 CLASS_N = 10 # 0-9
 
-#This method splits the input training image into small cells (of a single digit) and uses these cells as training data.
-#The default training image (MNIST) is a 1000x1000 size image and each digit is of size 10x20. so we divide 1000/10 horizontally and 1000/20 vertically.
 def split2d(img, cell_size, flatten=True):
+    """
+    This method splits the input training image into small cells (of a single digit) and uses these cells as training data.
+    The default training image (MNIST) is a 1000x1000 size image and each digit is of size 10x20. so we divide 1000/10 horizontally and 1000/20 vertically.
+
+    :param img:
+    :param cell_size:
+    :param flatten:
+    :return:
+    """
     h, w = img.shape[:2]
     sx, sy = cell_size
     cells = [np.hsplit(row, w//sx) for row in np.vsplit(img, h//sy)]
@@ -31,6 +39,7 @@ def split2d(img, cell_size, flatten=True):
     if flatten:
         cells = cells.reshape(-1, sy, sx)
     return cells
+
 
 def load_digits(fn):
     print('loading "%s for training" ...' % fn)
@@ -41,6 +50,7 @@ def load_digits(fn):
         resized_digits.append(imresize(digit,(IMG_WIDTH, IMG_HEIGHT)))
     labels = np.repeat(np.arange(CLASS_N), len(digits)/CLASS_N)
     return np.array(resized_digits), labels
+
 
 def pixels_to_hog_20(img_array):
     hog_featuresData = []
@@ -84,27 +94,6 @@ class SVM_MODEL():
         return results[1].ravel()
 
 
-def get_digits(contours, hierarchy):
-    hierarchy = hierarchy[0]
-    bounding_rectangles = [cv2.boundingRect(ctr) for ctr in contours]
-    final_bounding_rectangles = []
-    #find the most common heirarchy level - that is where our digits's bounding boxes are
-    u, indices = np.unique(hierarchy[:,-1], return_inverse=True)
-    most_common_heirarchy = u[np.argmax(np.bincount(indices))]
-
-    for r,hr in zip(bounding_rectangles, hierarchy):
-        x,y,w,h = r
-        #this could vary depending on the image you are trying to predict
-        #we are trying to extract ONLY the rectangles with images in it (this is a very simple way to do it)
-        #we use heirarchy to extract only the boxes that are in the same global level - to avoid digits inside other digits
-        #ex: there could be a bounding box inside every 6,9,8 because of the loops in the number's appearence - we don't want that.
-        #read more about it here: https://docs.opencv.org/trunk/d9/d8b/tutorial_py_contours_hierarchy.html
-        if ((w*h)>250) and (10 <= w <= 200) and (10 <= h <= 200) and hr[3] == most_common_heirarchy:
-            final_bounding_rectangles.append(r)
-
-    return final_bounding_rectangles
-
-
 def proc_user_img(img_file, model):
     print('loading "%s for digit recognition" ...' % img_file)
     im = cv2.imread(img_file)
@@ -113,28 +102,6 @@ def proc_user_img(img_file, model):
 
     imgray = cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
     plt.imshow(imgray)
-    # kernel = np.ones((5,5),np.uint8)
-    #
-    # ret,thresh = cv2.threshold(imgray,127,255,0)
-    # thresh = cv2.erode(thresh,kernel,iterations = 1)
-    # thresh = cv2.dilate(thresh,kernel,iterations = 1)
-    # thresh = cv2.erode(thresh,kernel,iterations = 1)
-
-    # _,contours,hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
-    # digits_rectangles = get_digits(contours,hierarchy)  #rectangles of bounding the digits in user image
-
-    # for rect in digits_rectangles:
-    #     x,y,w,h = rect
-    #     cv2.rectangle(im,(x,y),(x+w,y+h),(0,255,0),2)
-    #     im_digit = imgray[y:y+h,x:x+w]
-    #     im_digit = (255-im_digit)
-    #     im_digit = imresize(im_digit,(IMG_WIDTH ,IMG_HEIGHT))
-    #
-    #     hog_img_data = pixels_to_hog_20([im_digit])
-    #     pred = model.predict(hog_img_data)
-    #     cv2.putText(im, str(int(pred[0])), (x,y),cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 0, 0), 3)
-    #     cv2.putText(blank_image, str(int(pred[0])), (x,y),cv2.FONT_HERSHEY_SIMPLEX, 3, (255, 0, 0), 5)
 
     im_digit = (255-imgray)
     im_digit = imresize(im_digit,(IMG_WIDTH ,IMG_HEIGHT))
@@ -153,44 +120,6 @@ def get_contour_precedence(contour, cols):
     return contour[1] * cols + contour[0]  #row-wise ordering
 
 
-#this function processes a custom training image
-#see example : custom_train.digits.jpg
-#if you want to use your own, it should be in a similar format
-def load_digits_custom(img_file):
-    train_data = []
-    train_target = []
-    start_class = 1
-    im = cv2.imread(img_file)
-    imgray = cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
-    plt.imshow(imgray)
-    kernel = np.ones((5,5),np.uint8)
-
-    ret,thresh = cv2.threshold(imgray,127,255,0)
-    thresh = cv2.erode(thresh,kernel,iterations = 1)
-    thresh = cv2.dilate(thresh,kernel,iterations = 1)
-    thresh = cv2.erode(thresh,kernel,iterations = 1)
-
-    _,contours,hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    digits_rectangles = get_digits(contours,hierarchy)  #rectangles of bounding the digits in user image
-
-    #sort rectangles accoring to x,y pos so that we can label them
-    digits_rectangles.sort(key=lambda x:get_contour_precedence(x, im.shape[1]))
-
-    for index,rect in enumerate(digits_rectangles):
-        x,y,w,h = rect
-        cv2.rectangle(im,(x,y),(x+w,y+h),(0,255,0),2)
-        im_digit = imgray[y:y+h,x:x+w]
-        im_digit = (255-im_digit)
-
-        im_digit = imresize(im_digit,(IMG_WIDTH, IMG_HEIGHT))
-        train_data.append(im_digit)
-        train_target.append(start_class%10)
-
-        if index>0 and (index+1) % 10 == 0:
-            start_class += 1
-    cv2.imwrite("training_box_overlay.png",im)
-
-    return np.array(train_data), np.array(train_target)
 
 #------------------data preparation--------------------------------------------
 
@@ -198,8 +127,6 @@ TRAIN_DATA_IMG = 'img/digits.png'
 USER_IMG = 'img/test-4.bmp'
 
 digits, labels = load_digits(TRAIN_DATA_IMG) #original MNIST data
-
-#digits, labels = load_digits_custom('custom_train_digits.jpg') #my handwritten dataset
 
 print('train data shape',digits.shape)
 print('test data shape',labels.shape)
