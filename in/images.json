@@ -1,0 +1,8 @@
+{
+  "body":{
+    "images":[
+      { "imagePath":"", "KNNValue": -1, "SVMValue":-1, "actualValue":-1},
+      { "imagePath":"", "KNNValue": -1, "SVMValue":-1, "actualValue":-1}
+    ]
+  }
+}
