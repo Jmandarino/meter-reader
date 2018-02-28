@@ -40,21 +40,16 @@ def process_image(path_to_img):
     return warped, output
 
 
+def thresh_and_crop(display, output):
+    """Threshold image, find countours, and crop the display and output image
 
-if __name__ == '__main__':
-    """Process the image twice, the first time we find the bounding area of the contours of
-    the numbers
-    
-    the next time processing we extract the numbers and process
-    
+    :param display: grayscale image cropped to meter LCD screen
+    :param output: Original image cropped to meter LCD screen
+    :return:
     """
 
-    # process image and obtain display
-    display, output = process_image('img/test.jpg')
-
     thresh = cv2.threshold(display, 0, 255,
-                               cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
-
+                           cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
 
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (1, 5))
     thresh_copy = thresh.copy()
@@ -62,6 +57,7 @@ if __name__ == '__main__':
     # thresh_copy = cv2.erode(thresh_copy, kernel, iterations=2)
     _, cnts, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
     digitCnts = []
+
     for c in cnts:
         (x, y, w, h) = cv2.boundingRect(c)
         if w > 4 and h > 12:
@@ -72,20 +68,26 @@ if __name__ == '__main__':
     max_x = max_y = 0
 
     # computes the bounding box for the contour, and draws it on the frame,
-    for contour, hier in zip(digitCnts, hierarchy):
+    for contour in digitCnts:
         (x,y,w,h) = cv2.boundingRect(contour)
         min_x, max_x = min(x, min_x), max(x+w, max_x)
         min_y, max_y = min(y, min_y), max(y+h, max_y)
         # if w > 80 and h > 80:
         #     cv2.rectangle(output, (x,y), (x+w,y+h), (255, 0, 0), 2)
 
-
     # crop the threshold copy and the B&W output based on where the numbers are
     thresh_crop = thresh[min_y:max_y, min_x:max_x]
     out_crop = output[min_y:max_y , min_x:max_x]
 
-    # processing the image 2 times ended up being more successful
-    # refind contours after croping image
+    return thresh_crop, out_crop
+
+
+def get_digits(out_crop):
+    """
+
+    :param out_crop: an image of the tightly cropped meter values
+    :return: list of digits contours
+    """
     gray = cv2.cvtColor(out_crop, cv2.COLOR_BGR2GRAY)
     thresh = cv2.threshold(gray, 0, 255,
                            cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
@@ -105,16 +107,39 @@ if __name__ == '__main__':
 
     # processing again and resetting variables
     digitCnts = []
-    boxes = []
+
     for c in cnts:
         (x, y, w, h) = cv2.boundingRect(c)
+        # if the contour is too small we can assume it isn't a digit and noise
         if w > 4 and h > 12:
             digitCnts.append(c)
 
+    return thresh, digitCnts
+
+if __name__ == '__main__':
+    """Process the image twice, the first time we find the bounding area of the contours of
+    the numbers
+    
+    the next time processing we extract the numbers and process
+    
+    """
+
+    # BASE_PATH = os.path.realpath(__file__)
+    DIR_NAME = os.path.dirname(__file__)
+    IMG_DIR = "/img/"
+
+    # process image and obtain display
+    display, output = process_image(DIR_NAME + IMG_DIR+'test2.jpg')
+    # crop image down to just bigger than the size of the digits
+    thresh_crop, out_crop = thresh_and_crop(display, output)
+
+    # processing the image 2 times ended up being more successful
+    # refind contours after croping image
+    thresh, digitCnts = get_digits(out_crop)
+
     # process individual characters
-    output_list = []
     digitCnts = contours.sort_contours(digitCnts,
-                                 method="left-to-right")[0] # this might not be working
+                                       method="left-to-right")[0] # this might not be working
 
     BLACK = [0, 0, 0] # define color for border
     for counter, c in enumerate(digitCnts[::-1]):
@@ -125,6 +150,10 @@ if __name__ == '__main__':
         # add a border, this has helped with image processing via KNN/SVM
         constant = cv2.copyMakeBorder(roi,5,5,10,10,cv2.BORDER_CONSTANT, value=BLACK)
         cv2.imwrite("test-"+str(counter)+".bmp", constant)
+        # TODO: write these files to a temp directory to be processed
+        # TODO: store thresh_crop for debugging purposes
+        # TODO: make this its own method
+        # TODO: handler for ML
 
     exit(0)
 
