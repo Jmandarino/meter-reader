@@ -30,6 +30,11 @@ To read the data from Coned Electric meters (7 segment displays) and graph the i
 
 TODO: later
 
+### HOW TO USE:
+
+1. place images into in/imgs
+2. run setup.py
+
 
 
 ##Links of Interest:

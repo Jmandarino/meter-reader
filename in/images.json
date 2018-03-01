@@ -1,8 +1,20 @@
 {
-  "body":{
-    "images":[
-      { "imagePath":"","threshPath": "", "KNNValue": -1, "SVMValue":-1, "actualValue":-1},
-      { "imagePath":"","threshPath": "", "KNNValue": -1, "SVMValue":-1, "actualValue":-1}
-    ]
-  }
+    "body": {
+        "images": [
+            {
+                "imagePath": "/Users/joey/PycharmProjects/meter-reader/in/imgstest2.jpg",
+                "threshPath": "",
+                "KNNValue": -1,
+                "SVMValue": -1,
+                "actualValue": -1
+            },
+            {
+                "imagePath": "/Users/joey/PycharmProjects/meter-reader/in/imgstest.jpg",
+                "threshPath": "",
+                "KNNValue": -1,
+                "SVMValue": -1,
+                "actualValue": -1
+            }
+        ]
+    }
 }
