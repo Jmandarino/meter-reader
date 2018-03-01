@@ -34,7 +34,7 @@ base = {"body": {"images": []}}
 image_objs = []
 # create image objects
 for image in images:
-    d = {"imagePath": str(IMG_PATH+image),"threshPath": "", "KNNValue": -1, "SVMValue":-1, "actualValue":-1}
+    d = {"imagePath": str(IMG_PATH+"/"+image),"threshPath": "", "KNNValue": -1, "SVMValue":-1, "actualValue":-1}
     image_objs.append(d)
 
 
@@ -44,6 +44,7 @@ string = dumps(base, indent=4)
 out = open(BASE_DIR + IN_DIR + JSON_FILE, "w")
 out.write(string)
 out.close()
+print("Setup.py was successful")
 
 
 

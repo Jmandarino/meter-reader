@@ -2,14 +2,14 @@
     "body": {
         "images": [
             {
-                "imagePath": "/Users/joey/PycharmProjects/meter-reader/in/imgstest2.jpg",
+                "imagePath": "/Users/joey/PycharmProjects/meter-reader/in/imgs/test2.jpg",
                 "threshPath": "",
                 "KNNValue": -1,
                 "SVMValue": -1,
                 "actualValue": -1
             },
             {
-                "imagePath": "/Users/joey/PycharmProjects/meter-reader/in/imgstest.jpg",
+                "imagePath": "/Users/joey/PycharmProjects/meter-reader/in/imgs/test.jpg",
                 "threshPath": "",
                 "KNNValue": -1,
                 "SVMValue": -1,

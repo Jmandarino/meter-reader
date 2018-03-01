@@ -126,7 +126,7 @@ if __name__ == '__main__':
 
     # BASE_PATH = os.path.realpath(__file__)
     DIR_NAME = os.path.dirname(__file__)
-    IMG_DIR = "/img/"
+    IMG_DIR = "/in/imgs/"
 
     # process image and obtain display
     display, output = process_image(DIR_NAME + IMG_DIR+'test2.jpg')
