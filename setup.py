@@ -19,14 +19,6 @@ except FileNotFoundError:
     print(IMG_PATH, " Does not exist")
     sys.exit(1)
 
-
-try:
-    json = open(BASE_DIR + IN_DIR + JSON_FILE)
-except FileNotFoundError:
-    print(BASE_DIR + IN_DIR + JSON_FILE, " Does not exist")
-    sys.exit(1)
-
-
 """
 {
   "body":{
@@ -36,8 +28,6 @@ except FileNotFoundError:
     ]
   }
 }
-
-
 """
 # create JSON base
 base = {"body": {"images": []}}
@@ -49,7 +39,6 @@ for image in images:
 
 
 base["body"]["images"] = image_objs
-
 
 string = dumps(base, indent=4)
 out = open(BASE_DIR + IN_DIR + JSON_FILE, "w")
