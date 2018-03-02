@@ -162,8 +162,7 @@ if __name__ == '__main__':
         thresh, digitCnts = get_digits(out_crop)
 
         # process individual characters
-        digitCnts = contours.sort_contours(digitCnts,
-                                           method="left-to-right")[0] # this might not be working
+        # digitCnts = contours.sort_contours(digitCnts, method="left-to-right")[0] # this might not be working
 
         BLACK = [0, 0, 0] # define color for border
         for counter, c in enumerate(digitCnts[::-1]):
@@ -175,6 +174,7 @@ if __name__ == '__main__':
             constant = cv2.copyMakeBorder(roi, 5, 5, 10, 10, cv2.BORDER_CONSTANT, value=BLACK)
             path = os.path.join(DIGIT_DIR,  str(counter) + ".bmp")
             cv2.imwrite(os.path.join(DIGIT_DIR,  str(counter) + ".bmp"), constant)
+            cv2.imwrite(os.path.join(DIGIT_DIR,  "thresh" + ".bmp"), thresh)
             # TODO: write these files to a temp directory to be processed
             # TODO: store thresh_crop for debugging purposes
             # TODO: make this its own method
