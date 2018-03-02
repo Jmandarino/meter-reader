@@ -4,6 +4,7 @@ import cv2
 import imutils
 from imutils.perspective import four_point_transform
 from imutils import contours
+import json
 
 def process_image(path_to_img):
     # creates an edge map and convert to gray scale
@@ -126,34 +127,55 @@ if __name__ == '__main__':
 
     # BASE_PATH = os.path.realpath(__file__)
     DIR_NAME = os.path.dirname(__file__)
-    IMG_DIR = "/in/imgs/"
+    IN_DIR = "in"
+    IMG_DIR = "imgs"
+    JSON_FILE = "images.json"
+    DIGITS = "digits"
+    DIGIT_PATH = os.path.abspath(os.path.join(DIR_NAME, IN_DIR, IMG_DIR, DIGITS))
+    JSON_PATH = os.path.abspath(os.path.join(DIR_NAME, IN_DIR,JSON_FILE))
+    image_list = []
 
-    # process image and obtain display
-    display, output = process_image(DIR_NAME + IMG_DIR+'test2.jpg')
-    # crop image down to just bigger than the size of the digits
-    thresh_crop, out_crop = thresh_and_crop(display, output)
+    try:
+        data = json.load(open(JSON_PATH, 'r'))
+    except FileExistsError:
+        print("couldn't find JSON")
+        exit(1)
 
-    # processing the image 2 times ended up being more successful
-    # refind contours after croping image
-    thresh, digitCnts = get_digits(out_crop)
+    # store path to image in image list from json file
+    for image in data["body"]["images"]:
+        t = (image["name"], image["imagePath"] )
+        image_list.append(t)
 
-    # process individual characters
-    digitCnts = contours.sort_contours(digitCnts,
-                                       method="left-to-right")[0] # this might not be working
+    for image_tuple in image_list:
+        name = image_tuple[0]
+        folder_name = name.split('.')[0]  # name before '.'
+        DIGIT_DIR = os.path.abspath(os.path.join(DIGIT_PATH, folder_name))
+        if not os.path.exists(DIGIT_DIR):
+            os.makedirs(DIGIT_DIR)
+        # process image and obtain display
+        display, output = process_image(image_tuple[1])
+        # crop image down to just bigger than the size of the digits
+        thresh_crop, out_crop = thresh_and_crop(display, output)
 
-    BLACK = [0, 0, 0] # define color for border
-    for counter, c in enumerate(digitCnts[::-1]):
-        # extract the digit ROI
-        (x, y, w, h) = cv2.boundingRect(c)
-        # cut image down to size of contour's max boundaries
-        roi = thresh[y:y + h, x:x + w]
-        # add a border, this has helped with image processing via KNN/SVM
-        constant = cv2.copyMakeBorder(roi,5,5,10,10,cv2.BORDER_CONSTANT, value=BLACK)
-        cv2.imwrite("test-"+str(counter)+".bmp", constant)
-        # TODO: write these files to a temp directory to be processed
-        # TODO: store thresh_crop for debugging purposes
-        # TODO: make this its own method
-        # TODO: handler for ML
+        # processing the image 2 times ended up being more successful
+        # refind contours after croping image
+        thresh, digitCnts = get_digits(out_crop)
 
-    exit(0)
+        # process individual characters
+        digitCnts = contours.sort_contours(digitCnts,
+                                           method="left-to-right")[0] # this might not be working
 
+        BLACK = [0, 0, 0] # define color for border
+        for counter, c in enumerate(digitCnts[::-1]):
+            # extract the digit ROI
+            (x, y, w, h) = cv2.boundingRect(c)
+            # cut image down to size of contour's max boundaries
+            roi = thresh[y:y + h, x:x + w]
+            # add a border, this has helped with image processing via KNN/SVM
+            constant = cv2.copyMakeBorder(roi, 5, 5, 10, 10, cv2.BORDER_CONSTANT, value=BLACK)
+            path = os.path.join(DIGIT_DIR,  str(counter) + ".bmp")
+            cv2.imwrite(os.path.join(DIGIT_DIR,  str(counter) + ".bmp"), constant)
+            # TODO: write these files to a temp directory to be processed
+            # TODO: store thresh_crop for debugging purposes
+            # TODO: make this its own method
+            # TODO: handler for ML
