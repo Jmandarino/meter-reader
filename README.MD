@@ -23,8 +23,8 @@ To read the data from Coned Electric meters (7 segment displays) and graph the i
 
 1. Connect user flows (processing img -> figure out image -> graph)
 2. Error Processing for (OCR)
-2. Grab EXIF data from picture
 3. Error Processing for data (if ocr failed to read data correctly what should we do
+4. centralize paths instead of declaring them in each file
 
 
 ### Requirements and how to install

@@ -200,4 +200,3 @@ if __name__ == '__main__':
             cv2.imwrite(os.path.join(DIGIT_DIR,  str(counter) + ".bmp"), constant)
             cv2.imwrite(os.path.join(DIGIT_DIR,  "thresh" + ".bmp"), thresh)
             # TODO: make this its own method
-            # TODO: handler for ML
