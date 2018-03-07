@@ -6,6 +6,30 @@ from imutils.perspective import four_point_transform
 from imutils import contours
 import json
 
+
+def sort_contours(cnts, method="right-to-left"):
+    # initialize the reverse flag and sort index
+    reverse = False
+    i = 0
+
+    # handle if we need to sort in reverse
+    if method == "right-to-left" or method == "bottom-to-top":
+        reverse = True
+
+    # handle if we are sorting against the y-coordinate rather than
+    # the x-coordinate of the bounding box
+    if method == "top-to-bottom" or method == "bottom-to-top":
+        i = 1
+
+    # construct the list of bounding boxes and sort them from top to
+    # bottom
+    boundingBoxes = [cv2.boundingRect(c) for c in cnts]
+    (cnts, boundingBoxes) = zip(*sorted(zip(cnts, boundingBoxes),
+                                        key=lambda b: b[1][i], reverse=reverse))
+
+    # return the list of sorted contours and bounding boxes
+    return (cnts, boundingBoxes)
+
 def process_image(path_to_img):
     # creates an edge map and convert to gray scale
     image = cv2.imread(path_to_img)
@@ -162,7 +186,7 @@ if __name__ == '__main__':
         thresh, digitCnts = get_digits(out_crop)
 
         # process individual characters
-        # digitCnts = contours.sort_contours(digitCnts, method="left-to-right")[0] # this might not be working
+        digitCnts = contours.sort_contours(digitCnts, method="right-to-left")[0] # this might not be working
 
         BLACK = [0, 0, 0] # define color for border
         for counter, c in enumerate(digitCnts[::-1]):
