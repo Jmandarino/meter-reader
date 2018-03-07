@@ -175,7 +175,5 @@ if __name__ == '__main__':
             path = os.path.join(DIGIT_DIR,  str(counter) + ".bmp")
             cv2.imwrite(os.path.join(DIGIT_DIR,  str(counter) + ".bmp"), constant)
             cv2.imwrite(os.path.join(DIGIT_DIR,  "thresh" + ".bmp"), thresh)
-            # TODO: write these files to a temp directory to be processed
-            # TODO: store thresh_crop for debugging purposes
             # TODO: make this its own method
             # TODO: handler for ML

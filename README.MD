@@ -6,8 +6,9 @@ To read the data from Coned Electric meters (7 segment displays) and graph the i
 
 ### Workflow:
 
-1. Grab meter image
-2. process image (grabbing digit display)
+1. place images inside `in/imgs`
+2. run setup.py `python setup.py` this creates `images.json`
+3. process image data from `images.json` by running `python digit_ocr.py`
 3. run data through MNIST and SVM/KNN
 4. Graph data and find trends
 
