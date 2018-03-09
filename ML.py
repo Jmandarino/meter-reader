@@ -42,7 +42,7 @@ def split2d(img, cell_size, flatten=True):
 
 
 def load_digits(fn):
-    print('loading "%s for training" ...' % fn)
+    # print('loading "%s for training" ...' % fn)
     digits_img = cv2.imread(fn, 0)
     digits = split2d(digits_img, (DIGIT_WIDTH, DIGIT_HEIGHT))
     resized_digits = []
@@ -95,7 +95,7 @@ class SVM_MODEL():
 
 
 def proc_user_img(img_file, model):
-    print('loading "%s for digit recognition" ...' % img_file)
+    # print('loading "%s for digit recognition" ...' % img_file)
     im = cv2.imread(img_file)
     blank_image = np.zeros((im.shape[0],im.shape[1],3), np.uint8)
     blank_image.fill(255)
@@ -120,13 +120,13 @@ def get_contour_precedence(contour, cols):
     return contour[1] * cols + contour[0]  #row-wise ordering
 
 def train_models(data_path):
-    # TRAIN_DATA_IMG = 'img/digits.png'
-    # USER_IMG = 'img/test-4.bmp'
+    # TRAIN_DATA_IMG = 'imgs/digits.png'
+    # USER_IMG = 'imgs/test-4.bmp'
 
     digits, labels = load_digits(data_path)  # original MNIST data
 
-    print('train data shape', digits.shape)
-    print('test data shape', labels.shape)
+    # print('train data shape', digits.shape)
+    # print('test data shape', labels.shape)
 
     digits, labels = shuffle(digits, labels, random_state=256)
     train_digits_data = pixels_to_hog_20(digits)
@@ -149,8 +149,8 @@ def predict_number(model_knn, model_svm, img_path):
 
 # #------------------data preparation--------------------------------------------
 #
-# TRAIN_DATA_IMG = 'img/digits.png'
-# USER_IMG = 'img/test-4.bmp'
+# TRAIN_DATA_IMG = 'imgs/digits.png'
+# USER_IMG = 'imgs/test-4.bmp'
 #
 # digits, labels = load_digits(TRAIN_DATA_IMG) #original MNIST data
 #
