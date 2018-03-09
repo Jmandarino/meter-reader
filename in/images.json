@@ -3,22 +3,24 @@
         "images": [
             {
                 "imagePath": "C:\\Users\\joeym\\PycharmProjects\\meter-reader\\in\\imgs\\test.jpg",
-                "folderPath": "C:\\Users\\joeym\\PycharmProjects\\meter-reader\\in\\imgs",
+                "folderPath": "C:\\Users\\joeym\\PycharmProjects\\meter-reader\\in\\imgs\\digits\\test",
                 "name": "test.jpg",
                 "date": "02/18/18 20:50",
                 "threshPath": "",
                 "KNNValue": -1,
                 "SVMValue": -1,
+                "possibleValues": [],
                 "actualValue": -1
             },
             {
                 "imagePath": "C:\\Users\\joeym\\PycharmProjects\\meter-reader\\in\\imgs\\test2.jpg",
-                "folderPath": "C:\\Users\\joeym\\PycharmProjects\\meter-reader\\in\\imgs",
+                "folderPath": "C:\\Users\\joeym\\PycharmProjects\\meter-reader\\in\\imgs\\digits\\test2",
                 "name": "test2.jpg",
                 "date": "02/16/18 23:21",
                 "threshPath": "",
                 "KNNValue": -1,
                 "SVMValue": -1,
+                "possibleValues": [],
                 "actualValue": -1
             }
         ]
