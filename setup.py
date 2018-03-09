@@ -42,6 +42,7 @@ Takes files from in/imgs and converts them to a images.json file to be used furt
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 IN_DIR = "in"
 IMG_DIR = "imgs"
+DIGITS_DIR = "digits"
 JSON_FILE = "images.json"
 IMG_PATH = os.path.join(BASE_DIR, IN_DIR, IMG_DIR)
 
@@ -62,8 +63,17 @@ base = {"body": {"images": []}}
 image_objs = []
 # create image objects
 for image in images:
-    d = {"imagePath": os.path.join(IMG_PATH, image), "folderPath": IMG_PATH, "name": image, "date": "", "threshPath": "",
-         "KNNValue": -1, "SVMValue": -1, "actualValue": -1}
+    digits_dir_name = image.split('.')[0]
+    d = {"imagePath": os.path.join(IMG_PATH, image),
+         "folderPath": os.path.join(IMG_PATH, DIGITS_DIR, digits_dir_name),
+         "name": image,
+         "date": "",
+         "threshPath": "",
+         "KNNValue": -1,
+         "SVMValue": -1,
+         "possibleValues": [],
+         "actualValue": -1
+         }
 
     date = get_date_from_exif(d["imagePath"])
     d["date"] = date

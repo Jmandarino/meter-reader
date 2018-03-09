@@ -167,13 +167,12 @@ if __name__ == '__main__':
 
     # store path to image in image list from json file
     for image in data["body"]["images"]:
-        t = (image["name"], image["imagePath"] )
+        t = (image["name"], image["imagePath"], image["folderPath"] )
         image_list.append(t)
 
     for image_tuple in image_list:
         name = image_tuple[0]
-        folder_name = name.split('.')[0]  # name before '.'
-        DIGIT_DIR = os.path.abspath(os.path.join(DIGIT_PATH, folder_name))
+        DIGIT_DIR = image_tuple[2]
         if not os.path.exists(DIGIT_DIR):
             os.makedirs(DIGIT_DIR)
         # process image and obtain display

@@ -119,44 +119,70 @@ def proc_user_img(img_file, model):
 def get_contour_precedence(contour, cols):
     return contour[1] * cols + contour[0]  #row-wise ordering
 
+def train_models(data_path):
+    # TRAIN_DATA_IMG = 'img/digits.png'
+    # USER_IMG = 'img/test-4.bmp'
+
+    digits, labels = load_digits(data_path)  # original MNIST data
+
+    print('train data shape', digits.shape)
+    print('test data shape', labels.shape)
+
+    digits, labels = shuffle(digits, labels, random_state=256)
+    train_digits_data = pixels_to_hog_20(digits)
+    X_train, X_test, y_train, y_test = train_test_split(train_digits_data, labels, test_size=0.33, random_state=42)
+
+    model_knn = KNN_MODEL(k=4)
+    model_knn.train(train_digits_data, labels)
+
+    model_svm = SVM_MODEL(num_feats=train_digits_data.shape[1])
+    model_svm.train(X_train, y_train)
+
+    return model_knn, model_svm
 
 
-#------------------data preparation--------------------------------------------
+def predict_number(model_knn, model_svm, img_path):
+    out_knn = proc_user_img(img_path, model_knn)
+    out_svm = proc_user_img(img_path, model_svm)
 
-TRAIN_DATA_IMG = 'img/digits.png'
-USER_IMG = 'img/test-4.bmp'
+    return out_knn, out_svm
 
-digits, labels = load_digits(TRAIN_DATA_IMG) #original MNIST data
-
-print('train data shape',digits.shape)
-print('test data shape',labels.shape)
-
-digits, labels = shuffle(digits, labels, random_state=256)
-train_digits_data = pixels_to_hog_20(digits)
-X_train, X_test, y_train, y_test = train_test_split(train_digits_data, labels, test_size=0.33, random_state=42)
-
-#------------------training and testing----------------------------------------
-
-model = KNN_MODEL(k = 3)
-model.train(X_train, y_train)
-preds = model.predict(X_test)
-print('Accuracy: ',accuracy_score(y_test, preds))
-
-model = KNN_MODEL(k = 4)
-model.train(train_digits_data, labels)
-out = proc_user_img(USER_IMG, model)
-print("KNN: ", out)
-
-
-
-model = SVM_MODEL(num_feats = train_digits_data.shape[1])
-model.train(X_train, y_train)
-preds = model.predict(X_test)
-print('Accuracy: ',accuracy_score(y_test, preds))
-
-model = SVM_MODEL(num_feats = train_digits_data.shape[1])
-model.train(train_digits_data, labels)
-out = proc_user_img(USER_IMG, model)
-print("SVM: ", out)
+# #------------------data preparation--------------------------------------------
+#
+# TRAIN_DATA_IMG = 'img/digits.png'
+# USER_IMG = 'img/test-4.bmp'
+#
+# digits, labels = load_digits(TRAIN_DATA_IMG) #original MNIST data
+#
+# print('train data shape',digits.shape)
+# print('test data shape',labels.shape)
+#
+# digits, labels = shuffle(digits, labels, random_state=256)
+# train_digits_data = pixels_to_hog_20(digits)
+# X_train, X_test, y_train, y_test = train_test_split(train_digits_data, labels, test_size=0.33, random_state=42)
+#
+# #------------------training and testing----------------------------------------
+#
+# model = KNN_MODEL(k = 3)
+# model.train(X_train, y_train)
+# preds = model.predict(X_test)
+# print('Accuracy: ',accuracy_score(y_test, preds))
+#
+# model = KNN_MODEL(k = 4)
+# model.train(train_digits_data, labels)
+# out = proc_user_img(USER_IMG, model)
+# print("KNN: ", out)
+#
+#
+#
+# model = SVM_MODEL(num_feats = train_digits_data.shape[1])
+# model.train(X_train, y_train)
+# preds = model.predict(X_test)
+# print('Accuracy: ',accuracy_score(y_test, preds))
+#
+# model = SVM_MODEL(num_feats = train_digits_data.shape[1])
+# model.train(train_digits_data, labels)
+# out = proc_user_img(USER_IMG, model)
+# print("SVM: ", out)
 
 #------------------------------------------------------------------------------
