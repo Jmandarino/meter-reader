@@ -31,14 +31,6 @@ To read the data from Coned Electric meters (7 segment displays) and graph the i
 
 TODO: later
 
-### HOW TO USE:
+## Major issues:
 
-1. place images into in/imgs
-2. run setup.py
-
-
-
-##Links of Interest:
-https://www.pyimagesearch.com/2017/02/13/recognizing-digits-with-opencv-and-python/
-
-https://github.com/pavitrakumar78/Python-Custom-Digit-Recognition
+image processing is strong enough given every picture is varied. 
