@@ -141,6 +141,7 @@ def get_digits(out_crop):
 
     return thresh, digitCnts
 
+
 if __name__ == '__main__':
     """Process the image twice, the first time we find the bounding area of the contours of
     the numbers
@@ -177,7 +178,13 @@ if __name__ == '__main__':
             os.makedirs(DIGIT_DIR)
         # process image and obtain display
         display, output = process_image(image_tuple[1])
-        # crop image down to just bigger than the size of the digits
+
+        # save display for debugging/testing purposes
+        cv2.imwrite(os.path.join(DIGIT_DIR,  "screen.bmp"), display)
+
+
+
+    # crop image down to just bigger than the size of the digits
         thresh_crop, out_crop = thresh_and_crop(display, output)
 
         # processing the image 2 times ended up being more successful
