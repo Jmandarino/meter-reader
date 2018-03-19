@@ -33,7 +33,7 @@ def sort_contours(cnts, method="right-to-left"):
 def process_image(path_to_img):
     # creates an edge map and convert to gray scale
     image = cv2.imread(path_to_img)
-    image = imutils.resize(image, height=500)
+    image = imutils.resize(image, height=1000)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (5, 5), 0)
     edged = cv2.Canny(blurred, 50, 200, 255)
@@ -113,7 +113,11 @@ def get_digits(out_crop):
     :param out_crop: an image of the tightly cropped meter values
     :return: list of digits contours
     """
-    gray = cv2.cvtColor(out_crop, cv2.COLOR_BGR2GRAY)
+    # adjust exposure
+    alpha = float(2.5)
+    exposure_img = cv2.multiply(out_crop, np.array([alpha]))
+    gray = cv2.cvtColor(exposure_img, cv2.COLOR_BGR2GRAY)
+
     thresh = cv2.threshold(gray, 0, 255,
                            cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
 
@@ -135,6 +139,10 @@ def get_digits(out_crop):
 
     for c in cnts:
         (x, y, w, h) = cv2.boundingRect(c)
+
+        # contours that are more wide than tall aren't numbers
+        if w > h:
+            continue
         # if the contour is too small we can assume it isn't a digit and noise
         if w > 4 and h > 12:
             digitCnts.append(c)
