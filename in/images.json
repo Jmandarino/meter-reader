@@ -2,86 +2,72 @@
     "body": {
         "images": [
             {
-                "imagePath": "C:\\Users\\joeym\\PycharmProjects\\meter-reader\\in\\imgs\\20180207_235833411_iOS.jpg",
-                "folderPath": "C:\\Users\\joeym\\PycharmProjects\\meter-reader\\in\\imgs\\digits\\20180207_235833411_iOS",
+                "imagePath": "/Users/joey/PycharmProjects/meter-reader/in/imgs/20180207_235833411_iOS.jpg",
+                "folderPath": "/Users/joey/PycharmProjects/meter-reader/in/imgs/digits/20180207_235833411_iOS",
                 "name": "20180207_235833411_iOS.jpg",
                 "date": "02/07/18 18:58",
                 "threshPath": "",
                 "KNNValue": -1,
                 "SVMValue": -1,
                 "possibleValues": [
-                    81,
-                    22
+                    921554,
+                    921554
                 ],
                 "actualValue": -1
             },
             {
-                "imagePath": "C:\\Users\\joeym\\PycharmProjects\\meter-reader\\in\\imgs\\20180208_050052202_iOS.jpg",
-                "folderPath": "C:\\Users\\joeym\\PycharmProjects\\meter-reader\\in\\imgs\\digits\\20180208_050052202_iOS",
-                "name": "20180208_050052202_iOS.jpg",
-                "date": "02/08/18 00:00",
-                "threshPath": "",
-                "KNNValue": -1,
-                "SVMValue": -1,
-                "possibleValues": [
-                    4,
-                    2
-                ],
-                "actualValue": -1
-            },
-            {
-                "imagePath": "C:\\Users\\joeym\\PycharmProjects\\meter-reader\\in\\imgs\\20180208_130524473_iOS.jpg",
-                "folderPath": "C:\\Users\\joeym\\PycharmProjects\\meter-reader\\in\\imgs\\digits\\20180208_130524473_iOS",
-                "name": "20180208_130524473_iOS.jpg",
-                "date": "02/08/18 08:05",
-                "threshPath": "",
-                "KNNValue": -1,
-                "SVMValue": -1,
-                "possibleValues": [
-                    41411,
-                    41113
-                ],
-                "actualValue": -1
-            },
-            {
-                "imagePath": "C:\\Users\\joeym\\PycharmProjects\\meter-reader\\in\\imgs\\20180208_135253063_iOS.jpg",
-                "folderPath": "C:\\Users\\joeym\\PycharmProjects\\meter-reader\\in\\imgs\\digits\\20180208_135253063_iOS",
-                "name": "20180208_135253063_iOS.jpg",
-                "date": "02/08/18 08:52",
-                "threshPath": "",
-                "KNNValue": -1,
-                "SVMValue": -1,
-                "possibleValues": [
-                    531211,
-                    531211
-                ],
-                "actualValue": -1
-            },
-            {
-                "imagePath": "C:\\Users\\joeym\\PycharmProjects\\meter-reader\\in\\imgs\\test.jpg",
-                "folderPath": "C:\\Users\\joeym\\PycharmProjects\\meter-reader\\in\\imgs\\digits\\test",
-                "name": "test.jpg",
-                "date": "02/18/18 20:50",
-                "threshPath": "",
-                "KNNValue": -1,
-                "SVMValue": -1,
-                "possibleValues": [
-                    41994,
-                    41995
-                ],
-                "actualValue": -1
-            },
-            {
-                "imagePath": "C:\\Users\\joeym\\PycharmProjects\\meter-reader\\in\\imgs\\test2.jpg",
-                "folderPath": "C:\\Users\\joeym\\PycharmProjects\\meter-reader\\in\\imgs\\digits\\test2",
+                "imagePath": "/Users/joey/PycharmProjects/meter-reader/in/imgs/test2.jpg",
+                "folderPath": "/Users/joey/PycharmProjects/meter-reader/in/imgs/digits/test2",
                 "name": "test2.jpg",
                 "date": "02/16/18 23:21",
                 "threshPath": "",
                 "KNNValue": -1,
                 "SVMValue": -1,
                 "possibleValues": [
-                    156911,
-                    152911
+                    831312611,
+                    131512111
+                ],
+                "actualValue": -1
+            },
+            {
+                "imagePath": "/Users/joey/PycharmProjects/meter-reader/in/imgs/test.jpg",
+                "folderPath": "/Users/joey/PycharmProjects/meter-reader/in/imgs/digits/test",
+                "name": "test.jpg",
+                "date": "02/18/18 20:50",
+                "threshPath": "",
+                "KNNValue": -1,
+                "SVMValue": -1,
+                "possibleValues": [
+                    11863,
+                    14523
+                ],
+                "actualValue": -1
+            },
+            {
+                "imagePath": "/Users/joey/PycharmProjects/meter-reader/in/imgs/20180208_135253063_iOS.jpg",
+                "folderPath": "/Users/joey/PycharmProjects/meter-reader/in/imgs/digits/20180208_135253063_iOS",
+                "name": "20180208_135253063_iOS.jpg",
+                "date": "02/08/18 08:52",
+                "threshPath": "",
+                "KNNValue": -1,
+                "SVMValue": -1,
+                "possibleValues": [
+                    954,
+                    1952
+                ],
+                "actualValue": -1
+            },
+            {
+                "imagePath": "/Users/joey/PycharmProjects/meter-reader/in/imgs/20180208_050052202_iOS.jpg",
+                "folderPath": "/Users/joey/PycharmProjects/meter-reader/in/imgs/digits/20180208_050052202_iOS",
+                "name": "20180208_050052202_iOS.jpg",
+                "date": "02/08/18 00:00",
+                "threshPath": "",
+                "KNNValue": -1,
+                "SVMValue": -1,
+                "possibleValues": [
+                    9215101910,
+                    4215111718
                 ],
                 "actualValue": -1
             }

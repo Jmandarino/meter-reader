@@ -37,6 +37,8 @@ for counter, image in enumerate(img_list):
         path = os.path.join(image["folderPath"], file)
         if os.path.isdir(path) or "thresh" in file:
             continue
+        if "screen" in file:
+            continue
         k, s = predict_number(knn, svm, path)
         pred_knn *= 10
         pred_svm *= 10
