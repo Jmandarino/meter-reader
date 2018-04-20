@@ -108,6 +108,26 @@ t = [
     "3/18/18 10:49",
     "3/18/18 23:23",
     "3/19/18 8:33",
+    "3/20/18 8:33",
+    "3/22/18 8:36",
+    "3/22/18 19:21",
+    "3/26/18 8:29",
+    "3/27/18 8:30",
+    "3/28/18 8:30",
+    "3/30/18 8:30",
+    "3/31/18 8:30",
+    "4/2/18 8:28",
+    "4/3/18 8:30",
+    "4/4/18 8:30",
+    "4/5/18 8:37",
+    "4/5/18 18:04",
+    "4/6/18 8:23",
+    "4/7/18 8:15",
+    "4/9/18 8:31",
+    "4/10/18 8:17",
+    "4/17/18 8:32",
+
+
 
 ]
 # stores energy meter readings (kWh)
@@ -199,6 +219,24 @@ e = [
     53307,
     53321,
     53324,
+    53336,
+    53356,
+    53361,
+    53396,
+    53405,
+    53411,
+    53430,
+    53439,
+    53455,
+    53464,
+    53475,
+    53484,
+    53489,
+    53494,
+    53500,
+    53527,
+    53535,
+    53607,
 ]
 
 """
@@ -261,9 +299,10 @@ def date_str_to_epoch(string):
 
 
 # TODO: in-> epoch out->epoch or datetime->dateime
-def init_axvlines(min_, max_):
+def init_axvlines(min_, max_, days):
     """
     Creates an array of date markers in epoch time  from a start and end date
+    :param days: 
     :param min_: start date (in epoch time)
     :param max_: end date (in epoch time)
     :return: list() of timestamps
@@ -280,7 +319,7 @@ def init_axvlines(min_, max_):
 
     # TODO: only work on datetime objects and
     while cur.timestamp() < max_:
-        cur = cur + timedelta(days=1)
+        cur = cur + timedelta(days=days)
         output.append(cur.timestamp())
 
     return output
@@ -355,7 +394,7 @@ def main():
     end = date_str_to_epoch(t[-1])
 
     global axvlines_raw
-    axvlines_raw = init_axvlines(start, end)
+    axvlines_raw = init_axvlines(start, end, 7)
     for x in axvlines_raw:
         axvlines.append(datetime.fromtimestamp(x))
 
