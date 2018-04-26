@@ -2,73 +2,36 @@
     "body": {
         "images": [
             {
-                "imagePath": "/Users/joey/PycharmProjects/meter-reader/in/imgs/20180207_235833411_iOS.jpg",
-                "folderPath": "/Users/joey/PycharmProjects/meter-reader/in/imgs/digits/20180207_235833411_iOS",
-                "name": "20180207_235833411_iOS.jpg",
-                "date": "02/07/18 18:58",
-                "threshPath": "",
-                "KNNValue": -1,
-                "SVMValue": -1,
-                "possibleValues": [
-                    921554,
-                    921554
-                ],
-                "actualValue": -1
-            },
-            {
-                "imagePath": "/Users/joey/PycharmProjects/meter-reader/in/imgs/test2.jpg",
-                "folderPath": "/Users/joey/PycharmProjects/meter-reader/in/imgs/digits/test2",
-                "name": "test2.jpg",
-                "date": "02/16/18 23:21",
-                "threshPath": "",
-                "KNNValue": -1,
-                "SVMValue": -1,
-                "possibleValues": [
-                    831312611,
-                    131512111
-                ],
-                "actualValue": -1
-            },
-            {
-                "imagePath": "/Users/joey/PycharmProjects/meter-reader/in/imgs/test.jpg",
-                "folderPath": "/Users/joey/PycharmProjects/meter-reader/in/imgs/digits/test",
-                "name": "test.jpg",
-                "date": "02/18/18 20:50",
-                "threshPath": "",
-                "KNNValue": -1,
-                "SVMValue": -1,
-                "possibleValues": [
-                    11863,
-                    14523
-                ],
-                "actualValue": -1
-            },
-            {
-                "imagePath": "/Users/joey/PycharmProjects/meter-reader/in/imgs/20180208_135253063_iOS.jpg",
-                "folderPath": "/Users/joey/PycharmProjects/meter-reader/in/imgs/digits/20180208_135253063_iOS",
-                "name": "20180208_135253063_iOS.jpg",
-                "date": "02/08/18 08:52",
-                "threshPath": "",
-                "KNNValue": -1,
-                "SVMValue": -1,
-                "possibleValues": [
-                    954,
-                    1952
-                ],
-                "actualValue": -1
-            },
-            {
-                "imagePath": "/Users/joey/PycharmProjects/meter-reader/in/imgs/20180208_050052202_iOS.jpg",
-                "folderPath": "/Users/joey/PycharmProjects/meter-reader/in/imgs/digits/20180208_050052202_iOS",
+                "imagePath": "/Users/based-mac/PycharmProjects/coned/in/imgs/20180208_050052202_iOS.jpg",
+                "folderPath": "/Users/based-mac/PycharmProjects/coned/in/imgs/digits/20180208_050052202_iOS",
                 "name": "20180208_050052202_iOS.jpg",
                 "date": "02/08/18 00:00",
                 "threshPath": "",
                 "KNNValue": -1,
                 "SVMValue": -1,
-                "possibleValues": [
-                    9215101910,
-                    4215111718
-                ],
+                "possibleValues": [],
+                "actualValue": -1
+            },
+            {
+                "imagePath": "/Users/based-mac/PycharmProjects/coned/in/imgs/test2.jpg",
+                "folderPath": "/Users/based-mac/PycharmProjects/coned/in/imgs/digits/test2",
+                "name": "test2.jpg",
+                "date": "02/16/18 23:21",
+                "threshPath": "",
+                "KNNValue": -1,
+                "SVMValue": -1,
+                "possibleValues": [],
+                "actualValue": -1
+            },
+            {
+                "imagePath": "/Users/based-mac/PycharmProjects/coned/in/imgs/test.jpg",
+                "folderPath": "/Users/based-mac/PycharmProjects/coned/in/imgs/digits/test",
+                "name": "test.jpg",
+                "date": "02/18/18 20:50",
+                "threshPath": "",
+                "KNNValue": -1,
+                "SVMValue": -1,
+                "possibleValues": [],
                 "actualValue": -1
             }
         ]
