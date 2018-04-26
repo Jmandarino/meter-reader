@@ -33,9 +33,9 @@ def sort_contours(cnts, method="right-to-left"):
 def process_image(path_to_img):
     # creates an edge map and convert to gray scale
     image = cv2.imread(path_to_img)
-    image = imutils.resize(image, height=1000)
+    image = imutils.resize(image, height=1500)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+    blurred = cv2.GaussianBlur(gray, (3, 3), 0)
     edged = cv2.Canny(blurred, 50, 200, 255)
 
     # find contours in the edge map, then sort them by their
