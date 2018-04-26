@@ -85,6 +85,13 @@ def thresh_and_crop(display, output):
 
     for c in cnts:
         (x, y, w, h) = cv2.boundingRect(c)
+        if w > h:
+            continue
+        aspect = float(w) /h
+        # remove contours with bad aspect ratios
+        if aspect <.2:
+            continue
+
         if w > 4 and h > 12:
             digitCnts.append(c)
 
@@ -129,7 +136,9 @@ def get_digits(out_crop):
 
     # then stretch the image vertically to connect the segments
     kernel = np.ones((3, 1), np.uint8)
-    thresh = cv2.dilate(thresh, kernel, iterations=1)
+    thresh = cv2.dilate(thresh, kernel, iterations=2)
+
+    kernel = np.ones((3, 3), np.uint8)
 
     thresh = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
     _, cnts, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
@@ -140,6 +149,10 @@ def get_digits(out_crop):
     for c in cnts:
         (x, y, w, h) = cv2.boundingRect(c)
 
+        aspect = float(w) /h
+        # remove contours with bad aspect ratios
+        if aspect <.2:
+            continue
         # contours that are more wide than tall aren't numbers
         if w > h:
             continue
